@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú Futurista - Espacio Profundo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: #020208;
+      color: #e0f2fe;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #spaceCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .nebula-glow {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.14) 0%, transparent 55%),
+        radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.05) 0%, transparent 65%);
+    }
+
+    .interface-container {
+      position: relative;
+      z-index: 10;
+      width: min(92vw, 420px);
+      padding: 36px 28px;
+      background: rgba(8, 12, 28, 0.65);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      clip-path: polygon(0 14px, 14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px));
+      box-shadow: 
+        0 0 30px rgba(56, 189, 248, 0.15),
+        inset 0 0 25px rgba(56, 189, 248, 0.06);
+    }
+
+    .interface-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 34px;
+    }
+
+    .sub-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.35em;
+      color: #38bdf8;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.75), 0 0 30px rgba(168, 85, 247, 0.5);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: #94a3b8;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+      margin-right: 6px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .cyber-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 16px 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f0f9ff;
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.12), rgba(168, 85, 247, 0.08));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.25), transparent);
+      transition: transform 0.6s ease;
+    }
+
+    .cyber-btn:hover {
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.35), rgba(168, 85, 247, 0.25));
+      border-color: #38bdf8;
+      box-shadow: 
+        0 0 20px rgba(56, 189, 248, 0.5),
+        inset 0 0 12px rgba(56, 189, 248, 0.3);
+      transform: translateY(-2px);
+      color: #ffffff;
+      text-shadow: 0 0 8px #38bdf8;
+    }
+
+    .cyber-btn:hover::before {
+      transform: translateX(200%);
+    }
+
+    .cyber-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      opacity: 0.65;
+    }
+
+    .btn-icon {
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid #38bdf8;
+      border-right: 2px solid #38bdf8;
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+
+    .cyber-btn:hover .btn-icon {
+      transform: rotate(45deg) translate(2px, -2px);
+      box-shadow: 1px -1px 4px #38bdf8;
+    }
+
+    .footer-stamp {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="spaceCanvas"></canvas>
+  <div class="nebula-glow"></div>
+
+  <main class="interface-container">
+    <header class="header">
+      <span class="sub-title">CORE MATRIX // NAV SYSTEM</span>
+      <h1 class="title">NEXUS PRIME</h1>
+      <div class="status-bar">
+        <span><span class="status-dot"></span>EN LÍNEA</span>
+        <span>SECTOR: 0X-CYGNUS</span>
+      </div>
+    </header>
+
+    <div class="menu-group">
+      <button class="cyber-btn" type="button">
+        <span class="btn-tag">01 //</span>
+        <span>INICIAR SISTEMA</span>
+        <span class="btn-icon"></span>
+      </button>
+
+      <button class="cyber-btn" type="button">
+        <span class="btn-tag">02 //</span>
+        <span>REGISTRO ESTELAR</span>
+        <span class="btn-icon"></span>
+      </button>
+
+      <button class="cyber-btn" type="button">
+        <span class="btn-tag">03 //</span>
+        <span>CONFIGURACIÓN</span>
+        <span class="btn-icon"></span>
+      </button>
+    </div>
+
+    <footer class="footer-stamp">
+      SYS.VER 4.09.2 // PROTOCOLO ACTIVO
+    </footer>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('spaceCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = 0;
+    let height = 0;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Fondo estelar
+    const STAR_COUNT = 180;
+    const stars = Array.from({ length: STAR_COUNT }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.6 + 0.3,
+      alpha: Math.random(),
+      speed: Math.random() * 0.015 + 0.005,
+      direction: Math.random() > 0.5 ? 1 : -1
+    }));
+
+    // Estrellas fugaces
+    const shootingStars = [];
+
+    function spawnShootingStar() {
+      const length = Math.random() * 90 + 70;
+      const angle = (Math.random() * 15 + 35) * (Math.PI / 180); // Diagonal ~40°
+      const speed = Math.random() * 9 + 11;
+      
+      shootingStars.push({
+        x: Math.random() * (width * 0.9),
+        y: Math.random() * (height * 0.45),
+        length: length,
+        speed: speed,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        thickness: Math.random() * 1.8 + 1,
+        life: 0,
+        maxLife: Math.random() * 40 + 35
+      });
+    }
+
+    // Intervalo continuo de estrellas fugaces
+    let nextShootingStar = performance.now() + 600;
+
+    function animate(now) {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render estrellas fijas / titilantes
+      for (let s of stars) {
+        s.alpha += s.speed * s.direction;
+        if (s.alpha >= 1 || s.alpha <= 0.15) {
+          s.direction *= -1;
+        }
+
+        ctx.fillStyle = `rgba(224, 242, 254, ${s.alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Generar nuevas estrellas fugaces
+      if (now > nextShootingStar) {
+        spawnShootingStar();
+        nextShootingStar = now + Math.random() * 2200 + 800; // Cada 0.8 a 3s
+      }
+
+      // Render estrellas fugaces
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const star = shootingStars[i];
+        star.x += star.vx;
+        star.y += star.vy;
+        star.life++;
+
+        const progress = star.life / star.maxLife;
+        const fade = progress < 0.2 ? progress / 0.2 : 1 - ((progress - 0.2) / 0.8);
+        const tailX = star.x - (star.vx / star.speed) * star.length;
+        const tailY = star.y - (star.vy / star.speed) * star.length;
+
+        const grad = ctx.createLinearGradient(star.x, star.y, tailX, tailY);
+        grad.addColorStop(0, `rgba(255, 255, 255, ${fade})`);
+        grad.addColorStop(0.2, `rgba(56, 189, 248, ${fade * 0.85})`);
+        grad.addColorStop(1, 'rgba(168, 85, 247, 0)');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = star.thickness;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(star.x, star.y);
+        ctx.stroke();
+
+        // Destello en la cabeza
+        ctx.fillStyle = `rgba(255, 255, 255, ${fade})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.thickness * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (star.life >= star.maxLife || star.x > width || star.y > height) {
+          shootingStars.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
