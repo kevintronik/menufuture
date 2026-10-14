@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LABERUN - Laberinto Tóxico Espacial</title>
+  <title>LABERUN - Laberinto Espacial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
@@ -51,9 +51,9 @@
       backdrop-filter: blur(8px);
       border: 1px solid rgba(56, 189, 248, 0.4);
       color: #38bdf8;
-      padding: 8px 14px;
+      padding: 8px 12px;
       font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-decoration: none;
       clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
@@ -70,12 +70,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
     }
 
     .title-badge {
       font-family: 'Orbitron', monospace;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 900;
       letter-spacing: 0.15em;
       color: #f8fafc;
@@ -83,9 +83,9 @@
     }
 
     .level-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: #38bdf8;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
@@ -93,15 +93,15 @@
     .hp-container {
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(239, 68, 68, 0.5);
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 4px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .hp-bar-bg {
-      width: 100px;
-      height: 10px;
+      width: 90px;
+      height: 9px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 3px;
       overflow: hidden;
@@ -115,20 +115,20 @@
     }
     .hp-text {
       font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #f8fafc;
-      min-width: 38px;
+      min-width: 36px;
     }
 
     /* Alerta de Gas */
     #gasAlert {
       position: fixed;
-      top: 64px;
+      top: 60px;
       font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #22c55e;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.92);
       padding: 4px 12px;
       border: 1px solid #22c55e;
       border-radius: 999px;
@@ -151,13 +151,13 @@
       max-height: 84vh;
     }
 
-    /* D-PAD Virtual para Desktop / Touch */
+    /* D-PAD Virtual */
     #dpad {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 130px;
-      height: 130px;
+      width: 125px;
+      height: 125px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
@@ -189,10 +189,37 @@
     #btnDown { grid-column: 2; grid-row: 3; }
     #btnRight { grid-column: 3; grid-row: 2; }
 
-    /* Botón de permiso giroscopio móvil */
+    /* Botón TURBO */
+    #turboBtn {
+      position: fixed;
+      bottom: 24px;
+      left: 20px;
+      background: rgba(245, 158, 11, 0.22);
+      border: 2px solid #f59e0b;
+      color: #fef08a;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.88rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      padding: 14px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+      z-index: 30;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+      transition: transform 0.1s, background 0.1s;
+    }
+    #turboBtn:active, #turboBtn.pressed {
+      background: #f59e0b;
+      color: #030712;
+      transform: scale(1.06);
+      box-shadow: 0 0 25px #f59e0b;
+    }
+
+    /* Botón Giroscopio */
     #gyroBtn {
       position: fixed;
-      bottom: 20px;
+      bottom: 84px;
       left: 20px;
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid #38bdf8;
@@ -206,7 +233,7 @@
       z-index: 25;
     }
 
-    /* Modal Fin de Juego / Victoria */
+    /* Modal */
     #modal {
       position: fixed;
       inset: 0;
@@ -246,7 +273,10 @@
 </head>
 <body>
   <div id="hud">
-    <a href="../index.html" class="btn-nav">⮌ MENÚ</a>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <a href="../index.html" class="btn-nav">⮌ MENÚ</a>
+      <button id="toggleGasBtn" class="btn-nav" style="border-color:#22c55e; color:#22c55e;">☣ GAS: ON</button>
+    </div>
 
     <div class="hud-center">
       <div class="title-badge">LABERUN</div>
@@ -274,6 +304,7 @@
     <div class="dbtn" id="btnRight">▶</div>
   </div>
 
+  <button id="turboBtn">⚡ TURBO</button>
   <button id="gyroBtn">📱 ACTIVAR GIROSCOPIO</button>
 
   <div id="modal">
@@ -308,9 +339,7 @@
         osc.start();
         osc.stop(this.ctx.currentTime + duration);
       }
-      damage() {
-        this.beep(80, 0.08, 'sawtooth');
-      }
+      damage() { this.beep(80, 0.08, 'sawtooth'); }
       win() {
         [440, 554, 659, 880].forEach((f, i) => {
           setTimeout(() => this.beep(f, 0.25, 'triangle'), i * 80);
@@ -324,11 +353,11 @@
     }
     const sfx = new SFXEngine();
 
-    // Configuración de Niveles
+    // Configuración de Niveles (Persecución lenta del gas)
     const LEVELS = [
-      { id: 1, name: "SECTOR 01 // FÁCIL", cols: 11, rows: 11, gasSpeed: 1800, hpDrain: 25 },
-      { id: 2, name: "SECTOR 02 // MEDIO", cols: 15, rows: 15, gasSpeed: 1400, hpDrain: 35 },
-      { id: 3, name: "SECTOR 03 // IMPOSIBLE", cols: 19, rows: 19, gasSpeed: 1000, hpDrain: 50 }
+      { id: 1, name: "SECTOR 01 // FÁCIL", cols: 11, rows: 11, gasDelay: 750, hpDrain: 20 },
+      { id: 2, name: "SECTOR 02 // MEDIO", cols: 15, rows: 15, gasDelay: 550, hpDrain: 30 },
+      { id: 3, name: "SECTOR 03 // IMPOSIBLE", cols: 19, rows: 19, gasDelay: 380, hpDrain: 45 }
     ];
 
     let currentLevelIndex = 0;
@@ -341,16 +370,37 @@
     let goal = { col: 0, row: 0 };
     let hp = 100;
     let isGameOver = false;
-    let gasGrid = []; // true si hay gas en la celda
-    let gasQueue = []; // Cola BFS de avance de gas
+
+    // Estado del Gas
+    let gasEnabled = true;
+    let gasGrid = [];
+    let gasQueue = [];
     let nextGasTick = 0;
+
+    // Estado de Turbo & Controles
+    let isTurboPressed = false;
+    let isShiftPressed = false;
+    let isGyroActive = false;
     let keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, s: false, a: false, d: false };
 
-    // Generador de Laberinto (Recursive Backtracker / DFS garantizado)
+    // Interruptor de Gas en HUD
+    const toggleGasBtn = document.getElementById('toggleGasBtn');
+    toggleGasBtn.addEventListener('click', () => {
+      sfx.init();
+      gasEnabled = !gasEnabled;
+      toggleGasBtn.textContent = gasEnabled ? '☣ GAS: ON' : '☣ GAS: OFF';
+      toggleGasBtn.style.color = gasEnabled ? '#22c55e' : '#94a3b8';
+      toggleGasBtn.style.borderColor = gasEnabled ? '#22c55e' : '#64748b';
+      if (!gasEnabled) {
+        document.getElementById('gasAlert').style.display = 'none';
+      }
+    });
+
+    // Generador de Laberinto (Recursive Backtracker / DFS)
     function generateMaze(c, r) {
       cols = c;
       rows = r;
-      grid = Array.from({ length: rows }, () => Array(cols).fill(1)); // 1 = pared, 0 = camino
+      grid = Array.from({ length: rows }, () => Array(cols).fill(1));
 
       function carve(x, y) {
         grid[y][x] = 0;
@@ -390,13 +440,11 @@
       generateMaze(lvl.cols, lvl.rows);
       resizeCanvas();
 
-      // Posición inicial del jugador
       player.x = 1.5 * cellSize;
       player.y = 1.5 * cellSize;
       player.vx = 0;
       player.vy = 0;
 
-      // Meta en la esquina inferior opuesta
       goal.col = cols - 2;
       goal.row = rows - 2;
 
@@ -405,32 +453,50 @@
       isGameOver = false;
       document.getElementById('modal').style.display = 'none';
 
-      // Inicializar Gas
+      // Inicializar persecución de gas
       gasGrid = Array.from({ length: rows }, () => Array(cols).fill(false));
       gasQueue = [{ col: 1, row: 1 }];
       gasGrid[1][1] = true;
-      nextGasTick = performance.now() + 1500; // 1.5s de gracia inicial
+      nextGasTick = performance.now() + 2000; // 2s de ventaja inicial
     }
 
     // Controles Touch / Giroscopio
     let tiltX = 0;
     let tiltY = 0;
+    const turboBtn = document.getElementById('turboBtn');
+    const gyroBtn = document.getElementById('gyroBtn');
+
+    function activateGyro() {
+      isGyroActive = true;
+      gyroBtn.style.display = 'none';
+      turboBtn.style.display = 'block';
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
 
     if (window.DeviceOrientationEvent) {
-      const gyroBtn = document.getElementById('gyroBtn');
       if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         gyroBtn.style.display = 'block';
         gyroBtn.addEventListener('click', () => {
           DeviceOrientationEvent.requestPermission().then(res => {
-            if (res === 'granted') {
-              gyroBtn.style.display = 'none';
-              window.addEventListener('deviceorientation', handleOrientation);
-            }
+            if (res === 'granted') activateGyro();
           });
         });
       } else {
-        window.addEventListener('deviceorientation', handleOrientation);
+        window.addEventListener('deviceorientation', (e) => {
+          if (e.gamma !== null && e.beta !== null) {
+            handleOrientation(e);
+            if (!isGyroActive) {
+              isGyroActive = true;
+              turboBtn.style.display = 'block';
+            }
+          }
+        });
       }
+    }
+
+    // Mostrar botón Turbo en dispositivos táctiles
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      turboBtn.style.display = 'block';
     }
 
     function handleOrientation(e) {
@@ -440,12 +506,24 @@
       }
     }
 
-    // Controles Teclado
+    // Eventos Botón Turbo
+    const setTurbo = (val) => {
+      isTurboPressed = val;
+      turboBtn.classList.toggle('pressed', val);
+    };
+    turboBtn.addEventListener('mousedown', () => setTurbo(true));
+    turboBtn.addEventListener('mouseup', () => setTurbo(false));
+    turboBtn.addEventListener('touchstart', (e) => { e.preventDefault(); setTurbo(true); }, { passive: false });
+    turboBtn.addEventListener('touchend', (e) => { e.preventDefault(); setTurbo(false); }, { passive: false });
+
+    // Controles Teclado (Tecla Shift = Turbo)
     window.addEventListener('keydown', (e) => {
       sfx.init();
+      if (e.key === 'Shift') isShiftPressed = true;
       if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
     });
     window.addEventListener('keyup', (e) => {
+      if (e.key === 'Shift') isShiftPressed = false;
       if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
     });
 
@@ -480,7 +558,6 @@
       btn.addEventListener('touchend', end, { passive: false });
     });
 
-    // Actualizar Barra de Vida
     function updateHPUI() {
       const fill = document.getElementById('hpFill');
       const text = document.getElementById('hpText');
@@ -493,7 +570,6 @@
       else fill.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
     }
 
-    // Resolver colisión círculo con muros
     function resolveCollision() {
       const pCol = Math.floor(player.x / cellSize);
       const pRow = Math.floor(player.y / cellSize);
@@ -521,7 +597,6 @@
       }
     }
 
-    // Bucle Principal
     let lastTime = performance.now();
 
     function update(now) {
@@ -529,7 +604,6 @@
       lastTime = now;
 
       if (!isGameOver) {
-        // Entrada de movimiento
         let ax = 0, ay = 0;
         if (keys.ArrowUp || keys.w) ay -= 1;
         if (keys.ArrowDown || keys.s) ay += 1;
@@ -542,26 +616,29 @@
         ax += tiltX * 1.6;
         ay += tiltY * 1.6;
 
-        const accel = 600 * dt;
+        // Multiplicador Turbo (Botón en Móvil / Shift en PC)
+        const isTurbo = isTurboPressed || isShiftPressed;
+        const turboMultiplier = isTurbo ? 2.4 : 1.0;
+        const accel = 620 * turboMultiplier * dt;
+
         player.vx += ax * accel;
         player.vy += ay * accel;
 
-        // Fricción
-        player.vx *= 0.88;
-        player.vy *= 0.88;
+        const friction = isTurbo ? 0.91 : 0.88;
+        player.vx *= friction;
+        player.vy *= friction;
 
         player.x += player.vx * dt;
         player.y += player.vy * dt;
 
         resolveCollision();
 
-        // El camino que pisa la bola deja rastro de gas retardado
         const currC = Math.floor(player.x / cellSize);
         const currR = Math.floor(player.y / cellSize);
 
-        // Avance de la ola de gas venenoso
+        // Persecución Lenta del Gas
         const lvl = LEVELS[currentLevelIndex];
-        if (now > nextGasTick && gasQueue.length > 0) {
+        if (gasEnabled && now > nextGasTick && gasQueue.length > 0) {
           const nextCell = gasQueue.shift();
           const neighbors = [
             { c: nextCell.col + 1, r: nextCell.row },
@@ -578,11 +655,11 @@
               }
             }
           }
-          nextGasTick = now + (lvl.gasSpeed / cols);
+          nextGasTick = now + lvl.gasDelay;
         }
 
-        // Comprobar si el jugador está dentro del gas
-        const inGas = gasGrid[currR] && gasGrid[currR][currC];
+        // Daño por gas
+        const inGas = gasEnabled && gasGrid[currR] && gasGrid[currR][currC];
         document.getElementById('gasAlert').style.display = inGas ? 'block' : 'none';
 
         if (inGas) {
@@ -597,7 +674,7 @@
           }
         }
 
-        // Comprobar Victoria (Llegada a la Meta)
+        // Meta
         const distToGoal = Math.hypot(player.x - (goal.col + 0.5) * cellSize, player.y - (goal.row + 0.5) * cellSize);
         if (distToGoal < cellSize * 0.45) {
           isGameOver = true;
@@ -625,17 +702,13 @@
       modalMsg.textContent = msg;
       modalBtn.textContent = btnText;
 
-      modalBtn.onclick = () => {
-        action();
-      };
+      modalBtn.onclick = () => { action(); };
       modal.style.display = 'flex';
     }
 
-    // Renderizado Gráfico
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Dibujar Muros y Caminos
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const x = c * cellSize;
@@ -650,11 +723,10 @@
             ctx.fillStyle = '#030712';
             ctx.fillRect(x, y, cellSize, cellSize);
 
-            // Dibujar Gas Tóxico
-            if (gasGrid[r][c]) {
-              ctx.fillStyle = 'rgba(34, 197, 94, 0.45)';
+            if (gasEnabled && gasGrid[r][c]) {
+              ctx.fillStyle = 'rgba(34, 197, 94, 0.42)';
               ctx.fillRect(x, y, cellSize, cellSize);
-              ctx.fillStyle = 'rgba(168, 85, 247, 0.25)';
+              ctx.fillStyle = 'rgba(168, 85, 247, 0.22)';
               ctx.beginPath();
               ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.35, 0, Math.PI * 2);
               ctx.fill();
@@ -663,7 +735,7 @@
         }
       }
 
-      // Dibujar Portal Meta
+      // Portal Meta
       const gx = (goal.col + 0.5) * cellSize;
       const gy = (goal.row + 0.5) * cellSize;
       ctx.save();
@@ -675,27 +747,24 @@
       ctx.fill();
       ctx.restore();
 
-      // Dibujar Bola del Jugador
+      // Bola del Jugador (Aura Neón / Turbo Flame)
+      const isTurbo = isTurboPressed || isShiftPressed;
       ctx.save();
-      ctx.shadowColor = hp > 25 ? '#38bdf8' : '#ef4444';
-      ctx.shadowBlur = 16;
+      ctx.shadowColor = isTurbo ? '#f59e0b' : (hp > 25 ? '#38bdf8' : '#ef4444');
+      ctx.shadowBlur = isTurbo ? 26 : 16;
       ctx.beginPath();
       ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-      ctx.fillStyle = hp > 25 ? '#e0f2fe' : '#fca5a5';
+      ctx.fillStyle = isTurbo ? '#fef08a' : (hp > 25 ? '#e0f2fe' : '#fca5a5');
       ctx.fill();
 
-      // Centro Neón
       ctx.beginPath();
       ctx.arc(player.x, player.y, player.radius * 0.45, 0, Math.PI * 2);
-      ctx.fillStyle = hp > 25 ? '#38bdf8' : '#ef4444';
+      ctx.fillStyle = isTurbo ? '#f59e0b' : (hp > 25 ? '#38bdf8' : '#ef4444');
       ctx.fill();
       ctx.restore();
     }
 
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-    });
-
+    window.addEventListener('resize', () => { resizeCanvas(); });
     initLevel(0);
     requestAnimationFrame(update);
   </script>
